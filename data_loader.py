@@ -27,16 +27,16 @@ def get_loader(transform,
       mode: One of 'train' or 'test'.
       batch_size: Batch size (if in testing mode, must have batch_size=1).
       vocab_threshold: Minimum word count threshold.
-      vocab_file: File containing the vocabulary. 
+      vocab_file: File containing the vocabulary.
       start_word: Special word denoting sentence start.
       end_word: Special word denoting sentence end.
       unk_word: Special word denoting unknown words.
       vocab_from_file: If False, create vocab from scratch & override any existing vocab_file.
                        If True, load vocab from from existing vocab_file, if it exists.
-      num_workers: Number of subprocesses to use for data loading 
+      num_workers: Number of subprocesses to use for data loading
       cocoapi_loc: The location of the folder containing the COCO API: https://github.com/cocodataset/cocoapi
     """
-    
+
     assert mode in ['train', 'test'], "mode must be one of 'train' or 'test'."
     if vocab_from_file==False: assert mode=='train', "To generate vocab from captions file, must be in training mode (mode='train')."
 
@@ -71,7 +71,7 @@ def get_loader(transform,
         # Create and assign a batch sampler to retrieve a batch with the sampled indices.
         initial_sampler = data.sampler.SubsetRandomSampler(indices=indices)
         # data loader for COCO dataset.
-        data_loader = data.DataLoader(dataset=dataset, 
+        data_loader = data.DataLoader(dataset=dataset,
                                       num_workers=num_workers,
                                       batch_sampler=data.sampler.BatchSampler(sampler=initial_sampler,
                                                                               batch_size=dataset.batch_size,
@@ -85,8 +85,8 @@ def get_loader(transform,
     return data_loader
 
 class CoCoDataset(data.Dataset):
-    
-    def __init__(self, transform, mode, batch_size, vocab_threshold, vocab_file, start_word, 
+
+    def __init__(self, transform, mode, batch_size, vocab_threshold, vocab_file, start_word,
         end_word, unk_word, annotations_file, vocab_from_file, img_folder):
         self.transform = transform
         self.mode = mode
@@ -103,7 +103,7 @@ class CoCoDataset(data.Dataset):
         else:
             test_info = json.loads(open(annotations_file).read())
             self.paths = [item['file_name'] for item in test_info['images']]
-        
+
     def __getitem__(self, index):
         # obtain image and caption if in training mode
         if self.mode == 'train':
