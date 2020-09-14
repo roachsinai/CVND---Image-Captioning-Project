@@ -10,7 +10,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class EncoderCNN(nn.Module):
     def __init__(self, embed_size):
         super(EncoderCNN, self).__init__()
-        resnet = models.resnet152(pretrained=True)
+        resnet = models.resnet50(pretrained=True)
         for param in resnet.parameters():
             param.requires_grad_(False)
 
@@ -20,8 +20,8 @@ class EncoderCNN(nn.Module):
         self.embed = nn.Linear(resnet.fc.in_features, embed_size)
 
     def forward(self, images):
-        features = self.resnet(images)
-        features = features.view(features.size(0), -1)
+        features = self.resnet(images) # shape: batch_size, 2048, 1, 1
+        features = features.view(features.size(0), -1) # shape: batch_size, 2048
         features = self.bn(features)
         features = self.embed(features)
         return features
