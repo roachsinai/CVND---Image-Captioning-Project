@@ -44,7 +44,7 @@ encoder.to(device)
 decoder.to(device)
 
 criterion = nn.CrossEntropyLoss().cuda() if torch.cuda.is_available() else nn.CrossEntropyLoss()
-params = list(decoder.parameters()) + list(encoder.parameters()) + list(encoder.bn.parameters())
+params = list(decoder.parameters()) + list(encoder.parameters())
 optimizer = torch.optim.Adam(params, lr=.001, betas=(.9, .999), eps=1e-08)
 
 total_step = math.ceil(len(data_loader.dataset.caption_lengths) / data_loader.batch_sampler.batch_size)
